@@ -38,7 +38,7 @@ AVRCharacter::AVRCharacter()
 	DestinationMarker = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DestinationMarker"));
 	DestinationMarker->SetupAttachment(GetRootComponent());
 
-	PostProcessingComponent = CreateAbstractDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessingComponent"));
+	PostProcessingComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessingComponent"));
 	PostProcessingComponent->SetupAttachment(GetRootComponent());
 }
 
@@ -107,7 +107,8 @@ void AVRCharacter::UpdateDestinationMarker() {
 	FHitResult collisionResult;
 	FPredictProjectilePathResult ProjectionResult;
 	auto ControllerLoc = RightController->GetComponentLocation();
-	ProjectParabolicArc(World, ControllerLoc, ProjectionResult);
+	auto LookDirection = Camera->GetForwardVector();
+	ProjectParabolicArc(World, ControllerLoc, LookDirection, ProjectionResult);
 	auto endingLoc = ControllerLoc + (RightController->GetForwardVector() * MaxTeleportDistance);
 	auto isHit = World->LineTraceSingleByChannel(collisionResult, ControllerLoc, endingLoc, ECC_Visibility);
 	
@@ -120,7 +121,7 @@ void AVRCharacter::UpdateDestinationMarker() {
 	}
 }
 
-void AVRCharacter::ProjectParabolicArc(UObject* World, FVector &StartLocation, FVector& Look, FPredictProjectilePathResult& Result) {
+void AVRCharacter::ProjectParabolicArc(UObject* World, FVector &StartLocation, FVector &Look, FPredictProjectilePathResult& Result) {
 	FVector LaunchVelocity = Look * TeleportProjectileSpeed;
 	auto PathPredictParams = FPredictProjectilePathParams(2.0, StartLocation, LaunchVelocity, 1000, ECC_Visibility, (AActor*)this);
 	PathPredictParams.DrawDebugType = EDrawDebugTrace::ForOneFrame;
