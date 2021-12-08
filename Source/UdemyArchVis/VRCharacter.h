@@ -57,7 +57,7 @@ class UDEMYARCHVIS_API AVRCharacter : public ACharacter
 		virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	private:
 		UPROPERTY(EditAnywhere)
-		float TeleportProjectileSpeed = 10.0;
+		float TeleportProjectileSpeed = 1000.0;
 		UPROPERTY(EditAnywhere)
 		float MaxTeleportDistance = 1000;
 		UPROPERTY(EditAnywhere)
